@@ -101,6 +101,9 @@ DATABASES = {
         'PASSWORD': 'a1b2c3d4##',
         'HOST': 'localhost',
         'PORT': '5432',
+        'TEST': {
+            'NAME': 'test_navedex',
+        },
     }
 }
 

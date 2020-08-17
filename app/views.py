@@ -1,15 +1,13 @@
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django_filters.rest_framework import DjangoFilterBackend
+
+from rest_framework import filters, generics, mixins, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from .models import *
 from .serializers import *
-
-from rest_framework import mixins, generics, status, filters, views, viewsets
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-
-from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 
@@ -44,11 +42,14 @@ class NaverUpdate(generics.UpdateAPIView):
     def put(self, request, pk):
         naver = self.get_object()
 
-        projects = request.data['projects']
-        check = all(item in Project.objects.filter(user_creator=request.user).values_list('id', flat=True) for item in projects)
+        try:
+            projects = request.data['projects']
+            check = all(item in Project.objects.filter(user_creator=request.user).values_list('id', flat=True) for item in projects)
 
-        if not check:
-            return Response({'projects': 'Os projetos devem pertencer aos criados pelo usuário.'}, status=status.HTTP_400_BAD_REQUEST)
+            if not check:
+                return Response({'projects': 'Os projetos devem pertencer aos criados pelo usuário.'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            pass
 
         serializer = NaverUpdateSerializer(naver, data=request.data)
         if serializer.is_valid():
@@ -95,11 +96,14 @@ class ProjectUpdate(generics.UpdateAPIView):
     def put(self, request, pk):
         project = self.get_object()
 
-        navers = request.data['navers']
-        check = all(item in Naver.objects.filter(user_creator=request.user).values_list('id', flat=True) for item in navers)
+        try:
+            navers = request.data['navers']
+            check = all(item in Naver.objects.filter(user_creator=request.user).values_list('id', flat=True) for item in navers)
 
-        if not check:
-            return Response({'navers': 'Os navers devem pertencer aos criados pelo usuário.'}, status=status.HTTP_400_BAD_REQUEST)
+            if not check:
+                return Response({'navers': 'Os navers devem pertencer aos criados pelo usuário.'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            pass
 
         serializer = ProjectUpdateSerializer(project, data=request.data)
         if serializer.is_valid():

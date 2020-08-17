@@ -1,10 +1,10 @@
-from .models import *
-from userauth.models import *
-
 from rest_framework import serializers
+from rest_framework.response import Response
+
+from userauth.models import *
 from userauth.serializers import *
 
-from rest_framework.response import Response
+from .models import *
 
 class NaverIndexSerializer(serializers.ModelSerializer):
 

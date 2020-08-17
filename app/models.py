@@ -1,4 +1,5 @@
 from django.db import models
+
 from navedex import settings
 
 # Create your models here.
